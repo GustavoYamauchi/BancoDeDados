@@ -1,0 +1,1 @@
+select * from publishers where state is null 
