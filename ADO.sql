@@ -8,21 +8,9 @@ group by publishers.pub_name
 -- 2) Quais os livros que tem preço superior à média de preços do seu tipo?
 select title, price, type 
 from titles
-where price >(select type from titles where type not like (select type, avg(price) media from titles group by type)) 
+where price > (select avg(price) media from titles)
 
-select type, avg(price)
-from titles
-group by type
-
-select title, price from titles where type like 'business'
-
-select title, price, type
-from titles
-where price > (SELECT AVG(t1.price)
-                FROM titles t1 CROSS JOIN titles t2
-                where t1.type = t2.type)
 -- 3) Que autores vivem na mesma cidade?  
-
 select  a1.au_fname, a2.au_fname, a1.city
 from authors a1 cross join authors a2
 where a1.city = a2.city and a1.au_id > a2.au_id
@@ -44,9 +32,8 @@ where titles.title_id not in (select sales.title_id from sales)
 update titles
 set price = price * 1.2
 where price < 12
--- 6) Inclua um Job que ainda não foi inserido com min_lvl 170 e max_lvl = 250
-select * from jobs
 
+-- 6) Inclua um Job que ainda não foi inserido com min_lvl 170 e max_lvl = 250
 insert jobs
 (job_desc, min_lvl, max_lvl)
 values ('Job' , 170, 250)
@@ -57,16 +44,13 @@ values('SNC77772M', 'Gustavo', '', 'Yamauchi', 15, 250)
 
 
 -- 8) Reduza em 1% o preço dos livros das editoras que não são da california.
-SELECT * FROM titles
-select * from publishers
-
 update titles
 set price = price * 0.99
 from publishers left join titles
 on publishers.pub_id = titles.pub_id
 where publishers.state <>like 'CA'
--- 9) Exclua o Employees que você criou.
 
+-- 9) Exclua o Employees que você criou.
 delete employee
 where emp_id like 'SNC77771M'
 
